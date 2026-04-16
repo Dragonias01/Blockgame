@@ -3,15 +3,30 @@ using UnityEngine;
 public class Default_block : Block
 {
 
-    public Default_block() : base()
+    private Renderer rend;
+    //Scheiss auf Konstruktor eh Für Looser
+    private void Awake()
     {
-        plattform.transform.localScale = new Vector3(1, 1, 1);
+        // Renderer einmal holen, sobald das Objekt existiert
+        rend = GetComponent<Renderer>();
     }
 
     public override void generate()
     {
-        // TODO: Blockdaten laden (z.B. Mesh, Material, Kollision setzen)
         plattform = gameObject;
+        plattform.transform.localScale = new Vector3(1f, 0.5f, 1f);
 
+        // Grün setzen (sichtbare Farbe)
+        if (rend == null)
+            rend = GetComponent<Renderer>();
+
+        if (rend != null)
+        {
+            rend.material.color = Color.green;
+        }
+        else
+        {
+            Debug.LogWarning("[Default_block] Kein Renderer gefunden!");
+        }
     }
 }

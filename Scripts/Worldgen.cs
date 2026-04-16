@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Worldgen
 {
+
     // private int bounds = 5;
     private Factory block_factory = new Block_factory();
 
@@ -28,7 +29,7 @@ public class Worldgen
 
                 // Position setzen
                 block.transform.position = new Vector3(x, 0, z) * spacing;
-
+                block.name = "tile [" + x + "][" + z + "]";
                 // Block initialisieren
                 block.generate();
             }
