@@ -8,13 +8,14 @@ public class Worldgen
     public Worldgen()
     {
         // Leer lassen
+
     }
 
-    public void GenerateWorld(int bounds, int spacing)
+    public void GenerateWorld(float bounds, float spacing)
     {
-        for (int x = -bounds; x <= bounds; x++)
+        for (float x = -bounds; x <= bounds; x++)
         {
-            for (int z = -bounds; z <= bounds; z++)
+            for (float z = -bounds; z <= bounds; z++)
             {
                 // Block erstellen
                 Block block = block_factory.Generate("default1");
@@ -26,7 +27,7 @@ public class Worldgen
                 }
 
                 // Position setzen
-                block.transform.position = new Vector3(x + spacing, 0, z + spacing);
+                block.transform.position = new Vector3(x, 0, z) * spacing;
 
                 // Block initialisieren
                 block.generate();

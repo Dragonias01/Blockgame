@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    [SerializeField] private int bounds = 5;
-    [SerializeField] private int spacing = 10;
+    [SerializeField] private float bounds = 5f;
+    [SerializeField] private float spacing = 1.1f;
     private Worldgen worldgen;
     void Start()
     {
