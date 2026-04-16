@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class Block_factory : Factory
 {
-    //konstruktor
     public Block_factory() : base() { }
-    public override GameObject Generate(string type)
+    public override Block Generate(string type)
     {
         switch (type)
         {
             case "default1":
-                return new Default_block();
+                GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                go.name = "Default_block";
+                return go.AddComponent<Default_block>();
+
             default:
+                Debug.LogWarning($"[Block_factory] Unbekannter Block-Typ: '{type}'");
                 return null;
         }
     }

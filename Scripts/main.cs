@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class main : MonoBehaviour
+public class Main : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private int bounds = 5;
+    [SerializeField] private int spacing = 10;
+    private Worldgen worldgen;
     void Start()
     {
-        //TODO: Worldgen aufrufen
+        worldgen = new Worldgen();
+        worldgen.GenerateWorld(bounds, spacing);
     }
 
     // Update is called once per frame

@@ -3,7 +3,10 @@ using UnityEngine;
 
 public abstract class Factory
 {
-    //konstruktor
-    public Factory(GameObject defaultPrefab) { }
-    public abstract GameObject Generate(string type);
+    // Parameterloser Konstruktor – kein defaultPrefab nötig,
+    // da MonoBehaviours über AddComponent erstellt werden.
+    public Factory() { }
+
+    //Erstellt einen Block anhand des Typ-Strings und gibt ihn zurück.
+    public abstract Block Generate(string type);
 }

@@ -2,14 +2,16 @@ using UnityEngine;
 
 public class Default_block : Block
 {
-    //konstruktor
+
     public Default_block() : base()
     {
-        //TODO: Blockdaten laden
+        plattform.transform.localScale = new Vector3(1, 1, 1);
     }
+
     public override void generate()
     {
-        //TODO: Block generieren
+        // TODO: Blockdaten laden (z.B. Mesh, Material, Kollision setzen)
         plattform = gameObject;
+
     }
 }
