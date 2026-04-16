@@ -4,14 +4,12 @@ public class Block_factory : Factory
 {
     //konstruktor
     public Block_factory() : base() { }
-    public override GameObject generate(string type)
+    public override GameObject Generate(string type)
     {
         switch (type)
         {
             case "default1":
-                Default_block block = new Default_block();
-                block.generate();
-                return block.GetPlattform();
+                return new Default_block();
             default:
                 return null;
         }

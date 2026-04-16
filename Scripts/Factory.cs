@@ -1,9 +1,9 @@
 using UnityEngine;
 
 
-abstract class Factory
+public abstract class Factory
 {
     //konstruktor
-    public Factory() { }
-    public abstract GameObject generate(string type);
+    public Factory(GameObject defaultPrefab) { }
+    public abstract GameObject Generate(string type);
 }

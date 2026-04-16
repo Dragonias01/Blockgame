@@ -7,17 +7,14 @@ public class Worldgen
     Factory block_factory = new Block_factory();
     public Worldgen()
     {
-        //bestehende Spilefiguren Löschen
-        spielfeld.Children.Clear();
 
-
-        Block default1 = block_factory.generate("default1");
+        Block default1 = block_factory.Generate("default1");
 
         //mit generate Ausführen
         default1.generate();
 
         //TODO: Auf Unity Logik um modelieren
-        spielfeld.Children.Add(default1.GetPlattform());
+        //spielfeld.Children.Add(default1.GetPlattform());
 
     }
 

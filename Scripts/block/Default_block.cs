@@ -10,5 +10,6 @@ public class Default_block : Block
     public override void generate()
     {
         //TODO: Block generieren
+        plattform = gameObject;
     }
 }
