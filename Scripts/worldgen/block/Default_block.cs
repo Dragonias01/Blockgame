@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Default_block : Block
 {
-
     private Renderer rend;
     //Scheiss auf Konstruktor eh Für Looser
     private void Awake()
@@ -13,8 +12,9 @@ public class Default_block : Block
 
     public override void generate()
     {
-        plattform = gameObject;
-        plattform.transform.localScale = new Vector3(1f, 0.5f, 1f);
+        block = gameObject;
+        block.transform.localScale = new Vector3(1f, 0.5f, 1f);
+
 
         // Grün setzen (sichtbare Farbe)
         if (rend == null)
