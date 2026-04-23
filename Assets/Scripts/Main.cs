@@ -28,7 +28,7 @@ public class Main : MonoBehaviour
     private Spawn_player spawnPlayer;
     private Camera mainCamera;
 
-    void Start()
+    public void Start()
     {
         // setup Camera
         mainCamera = Camera.main;
