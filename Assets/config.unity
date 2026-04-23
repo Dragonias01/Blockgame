@@ -269,11 +269,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00d9b1a62c372d4284c85eeb2aaf356, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Main
-  bounds: 5
+  bounds: 20
   spacing: 1.1
   Detailspread: 20
   player_size: {x: 0.5, y: 0.5, z: 0.5}
-  range: 5
+  range: 3
   tree_size: {x: 0.25, y: 1.5, z: 0.25}
   rock_size: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!1 &956121725
