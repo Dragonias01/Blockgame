@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Main : MonoBehaviour
 {
@@ -12,6 +14,13 @@ public class Main : MonoBehaviour
     [Header("Form Einstellungen")]
     [SerializeField] private Vector3 tree_size = new Vector3(0.25f, 1f, 0.25f);
     [SerializeField] private Vector3 rock_size = new Vector3(0.5f, 0.5f, 0.5f);
+
+    [Header("Kamera Einstellungen")]
+    [SerializeField] private float offset = 3f;
+    [SerializeField] private float smoothTime = 0.25f;
+
+    [SerializeField] private int dc_wood = 0;
+    [SerializeField] private int dc_stone = 0;
 
 
     //Klassen
@@ -43,10 +52,18 @@ public class Main : MonoBehaviour
         // setup Player
         spawnPlayer = new Spawn_player();
         spawnPlayer.SpawnPlayer(player_size);
+
+
     }
 
     //Eigenschafts Methode für die Reichweite
     public float GetRange() { return range; }
     public Vector3 GetTreeSize() { return tree_size; }
     public Vector3 GetRockSize() { return rock_size; }
+    public float GetOffset() { return offset; }
+    public float GetSmoothTime() { return smoothTime; }
+    public int GetDcWood() { return dc_wood; }
+    public void SetDcWood(int value) { dc_wood = value; }
+    public int GetDcStone() { return dc_stone; }
+    public void SetDcStone(int value) { dc_stone = value; }
 }

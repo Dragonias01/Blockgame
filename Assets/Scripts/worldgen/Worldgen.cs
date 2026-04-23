@@ -2,22 +2,16 @@ using UnityEngine;
 
 public class Worldgen
 {
-
-    // private int bounds = 5;
     private Factory block_factory = new Block_factory();
     private Factory detail_factory = new Detail_factory();
-    //Details zufällig generieren
     private System.Random rdetail = new System.Random();
 
-    public Worldgen()
-    {
-        // Leer lassen
-
-    }
+    public Worldgen() { }
 
     public void GenerateWorld(float bounds, float spacing, int detailspread)
     {
-        Block waterplane = block_factory.Generate("water");
+        // --- Wasserflaeche ---
+        Block waterplane = block_factory.Generate("water") as Block;
         if (waterplane != null)
         {
             waterplane.transform.position = new Vector3(0, -0.25f, 0);
@@ -27,15 +21,16 @@ public class Worldgen
         }
         else
         {
-            Debug.LogError("[Worldgen] Wasserfläche konnte nicht erstellt werden.");
+            Debug.LogError("[Worldgen] Wasserflaeche konnte nicht erstellt werden.");
         }
 
+        // --- Welt-Tiles ---
         for (float x = -bounds; x <= bounds; x++)
         {
             for (float z = -bounds; z <= bounds; z++)
             {
-                // Block erstellen
-                Block block = block_factory.Generate("default1");
+                // Block erstellen und auf Block casten
+                Block block = block_factory.Generate("default1") as Block;
 
                 if (block == null)
                 {
@@ -43,49 +38,28 @@ public class Worldgen
                     continue;
                 }
 
-                // Position setzen
                 block.transform.position = new Vector3(x, 0, z) * spacing;
                 block.name = "tile [" + x + "][" + z + "]";
                 block.gameObject.tag = "Detail";
-
-                // Block initialisieren
                 block.generate();
 
-                // Detail erstellen
-                if (rdetail.Next(0, 100) < detailspread) // 40% Chance für ein Detail
+                // Detail mit konfigurierter Wahrscheinlichkeit spawnen
+                if (rdetail.Next(0, 100) < detailspread)
                 {
-                    Block detail = null;
+                    string detailType = rdetail.Next(0, 100) < 50 ? "rock" : "tree";
+                    Block detail = detail_factory.Generate(detailType) as Block;
 
-                    if (rdetail.Next(0, 100) < 50) // 50% Chance für einen Rock statt einem Tree
+                    if (detail == null)
                     {
-                        detail = detail_factory.Generate("rock");
-                        if (detail == null)
-                        {
-                            Debug.LogError($"[Worldgen] Detail konnte nicht erstellt werden bei ({x}, 0.5f, {z}).");
-                            continue;
-                        }
+                        Debug.LogError($"[Worldgen] Detail '{detailType}' konnte nicht erstellt werden bei ({x}, 0.3f, {z}).");
+                        continue;
                     }
-                    else
-                    {
-                        detail = detail_factory.Generate("tree");
-                        if (detail == null)
-                        {
-                            Debug.LogError($"[Worldgen] Detail konnte nicht erstellt werden bei ({x}, 0.25f, {z}).");
-                            continue;
-                        }
-                    }
-                    // Position setzen
+
                     detail.transform.position = new Vector3(x, 0.3f, z) * spacing;
                     detail.name = "detail [" + x + "][" + z + "]";
                     detail.gameObject.tag = "Detail";
-                    // Detail initialisieren
                     detail.generate();
                 }
-                else
-                {
-                    continue; // Kein Detail generieren, weiter zum nächsten Block
-                }
-
             }
         }
     }
