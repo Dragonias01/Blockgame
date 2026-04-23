@@ -2,9 +2,16 @@ using UnityEngine;
 public class Tree : Block
 {
     private Renderer rend;
+    private Main main;
 
     private void Awake()
     {
+        main = FindObjectOfType<Main>();
+        if (main == null)
+        {
+            Debug.LogError("Main Script nicht gefunden!");
+            return;
+        }
         // Renderer einmal holen, sobald das Objekt existiert
         rend = GetComponent<Renderer>();
     }
@@ -12,7 +19,7 @@ public class Tree : Block
     public override void generate()
     {
         block = gameObject;
-        block.transform.localScale = new Vector3(1f, 0.125f, 1f);
+        block.transform.localScale = main.GetTreeSize();
 
 
         // Blau setzen (sichtbare Farbe)

@@ -9,11 +9,14 @@ public class Block_factory : Factory
         switch (type)
         {
             case "default1":
+
                 go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 go.name = "Default_block";
                 go.AddComponent<BoxCollider>(); // Collider hinzufügen
                 go.AddComponent<OnClick>(); // Klick-Handler hinzufügen
                 return go.AddComponent<Default_block>();
+
+
             case "water":
                 go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 go.name = "WaterPlane";

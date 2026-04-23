@@ -15,7 +15,7 @@ public class Detail_factory : Factory
                 go.GetComponent<Collider>().enabled = true;
                 go.AddComponent<OnClick>(); // Klick-Handler hinzufügen
                 go.AddComponent<HoverDetector>(); // Hover-Handler hinzufügen
-
+                go.AddComponent<HoverDetector>();
 
                 return go.AddComponent<Tree>();
             case "rock":

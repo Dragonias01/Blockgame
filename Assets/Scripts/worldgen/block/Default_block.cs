@@ -16,17 +16,16 @@ public class Default_block : Block
         block.transform.localScale = new Vector3(1f, 0.5f, 1f);
 
 
-        // Grün setzen (sichtbare Farbe)
-        if (rend == null)
-            rend = GetComponent<Renderer>();
-
-        if (rend != null)
+        //Material auf die textur Grass1 setzen ein bild was in Assets/Resources/Materials/grass1 liegt
+        Material mat = Resources.Load<Material>("Materials/grass1");
+        if (mat != null)
         {
-            rend.material.color = Color.green;
+            rend.material = mat;
         }
         else
         {
-            Debug.LogWarning("[Default_block] Kein Renderer gefunden!");
+            Debug.LogWarning("[Default_block] Material 'grass1' nicht gefunden!");
         }
+
     }
 }

@@ -15,18 +15,16 @@ public class WaterPlane : Block
         block = gameObject;
         block.transform.localScale = new Vector3(100f, 0.25f, 100f);
 
-
-        // Grün setzen (sichtbare Farbe)
-        if (rend == null)
-            rend = GetComponent<Renderer>();
-
-        if (rend != null)
+        //Material auf die textur Wassertextur setzen ein bild was in Assets/Resources/Materials/wasser1 liegt
+        Material mat = Resources.Load<Material>("Materials/wasser1");
+        if (mat != null)
         {
-            rend.material.color = Color.blue;
+            rend.material = mat;
         }
         else
         {
-            Debug.LogWarning("[WaterPlane] Kein Renderer gefunden!");
+            Debug.LogWarning("[WaterPlane] Material 'wasser1' nicht gefunden!");
         }
+
     }
 }
