@@ -23,8 +23,6 @@
 Der Spieler startet in einer prozedural generierten Welt und kann:
 
 - **Ressourcen sammeln** – Holz (Bäume), Stein (Felsen), Wasser und weitere Materialien abbauen
-- **Crafting & Verarbeitung** – Ressourcen zu Werkzeugen, Gebäuden oder weiterverarbeiteten Materialien umwandeln _(in Entwicklung)_
-- **Progression erleben** – Bessere Werkzeuge ermöglichen effizienteres Sammeln und neue Rezepte _(geplant)_
 
 Das Spiel orientiert sich am klassischen **Survival-Crafting-Loop**: Sammeln → Verarbeiten → Bauen → Überleben.
 

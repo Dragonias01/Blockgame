@@ -21,6 +21,7 @@ public class Block_factory : Factory
                 go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 go.name = "WaterPlane";
                 go.GetComponent<Collider>().enabled = false;
+
                 return go.AddComponent<WaterPlane>();
             default:
                 Debug.LogWarning($"[Block_factory] Unbekannter Block-Typ: '{type}'");
