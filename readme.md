@@ -13,6 +13,7 @@
 - [Systeme & Architektur](#systeme--architektur)
 - [Szenenaufbau](#szenenaufbau)
 - [Render-Pipeline Konfiguration](#render-pipeline-konfiguration)
+- [Wichtige Hinweise](#wichtige-hinweise)
 - [Bekannte Probleme & TODOs](#bekannte-probleme--todos)
 - [Entwicklungsrichtlinien](#entwicklungsrichtlinien)
 
@@ -23,6 +24,8 @@
 Der Spieler startet in einer prozedural generierten Welt und kann:
 
 - **Ressourcen sammeln** – Holz (Bäume), Stein (Felsen), Wasser und weitere Materialien abbauen
+- **Crafting & Verarbeitung** – Ressourcen zu Werkzeugen, Gebäuden oder weiterverarbeiteten Materialien umwandeln _(in Entwicklung)_
+- **Progression erleben** – Bessere Werkzeuge ermöglichen effizienteres Sammeln und neue Rezepte _(geplant)_
 
 Das Spiel orientiert sich am klassischen **Survival-Crafting-Loop**: Sammeln → Verarbeiten → Bauen → Überleben.
 
@@ -30,13 +33,13 @@ Das Spiel orientiert sich am klassischen **Survival-Crafting-Loop**: Sammeln →
 
 ## 🛠️ Technischer Stack
 
-| Komponente      | Details                                   |
-| --------------- | ----------------------------------------- |
-| Engine          | Unity (Universal Render Pipeline)         |
-| Sprache         | C#                                        |
-| Render-Pipeline | URP mit separaten PC- und Mobile-Profilen |
-| Plattformen     | PC (primär), Mobile (vorbereitet)         |
-| Input           | Unity Legacy Input System                 |
+| Komponente      | Details                                                                       |
+| --------------- | ----------------------------------------------------------------------------- |
+| Engine          | Unity (Universal Render Pipeline)                                             |
+| Sprache         | C#                                                                            |
+| Render-Pipeline | URP mit separaten PC- und Mobile-Profilen                                     |
+| Plattformen     | PC (primär), Mobile (vorbereitet)                                             |
+| Input           | Unity **Legacy Input System** (siehe [Wichtige Hinweise](#wichtige-hinweise)) |
 
 ---
 
@@ -51,16 +54,16 @@ Assets/
 │   └── wasser1.jpg         # Wasser-Textur
 │
 ├── Scenes/
-│   └── SampleScene.unity   # Hauptszene
+│   ├── SampleScene.unity   # Test-/Beispielszene
+│   └── main.unity          # Hauptspielszene
 │
 ├── Scripts/
-│   ├── Main.cs             # Einstiegspunkt & Konfiguration
+│   ├── Main.cs             # Einstiegspunkt & zentrale Konfiguration
 │   │
 │   ├── factory/            # Factory-Pattern für Objekt-Erzeugung
 │   │   ├── Factory.cs          # Abstrakte Basisklasse
 │   │   ├── Block_factory.cs    # Erzeugt Welt-Blöcke (Gras, Wasser)
-│   │   ├── Detail_Factory.cs   # Erzeugt Details (Bäume, Steine)
-│   │   └── UI_Factory.cs       # Erzeugt UI-Elemente
+│   │   └── Detail_Factory.cs   # Erzeugt Details (Bäume, Steine)
 │   │
 │   ├── worldgen/           # Weltgenerierung
 │   │   ├── Worldgen.cs         # Hauptlogik der prozeduralen Weltgenerierung
@@ -77,20 +80,12 @@ Assets/
 │   │   ├── FollowPlayer.cs     # Kamera folgt dem Spieler (SmoothDamp)
 │   │   └── Spawn_player.cs     # Spawnt den Spieler beim Start
 │   │
-│   ├── Events/             # Interaktions-Systeme
-│   │   ├── InRange.cs          # Prüft ob Spieler in Reichweite ist
-│   │   ├── Clicks/
-│   │   │   └── OnClick.cs      # Mausklick-Handler (Objekte abbauen)
-│   │   └── Hover/
-│   │       └── HoverDetector.cs # Hover-Effekte auf interagierbaren Objekten
-│   │
-│   └── UI/                 # Benutzeroberfläche
-│       ├── UI_Element.cs       # Abstrakte Basisklasse für UI-Elemente
-│       ├── UIHandler.cs        # Erstellt und verwaltet UI
-│       ├── UserInterface.cs    # Alternative UI-Erstellung (Button-Beispiel)
-│       └── Element/
-│           ├── UI_Canvas.cs    # Canvas-Element
-│           └── UI_Text.cs      # Text-Element
+│   └── Events/             # Interaktions-Systeme
+│       ├── InRange.cs          # Prüft ob Spieler in Reichweite ist
+│       ├── Clicks/
+│       │   └── OnClick.cs      # Mausklick-Handler (Objekte abbauen)
+│       └── Hover/
+│           └── HoverDetector.cs # Hover-Effekte auf interagierbaren Objekten
 │
 └── Settings/               # URP Render-Pipeline Konfigurationen
     ├── PC_RPAsset.asset        # PC-Qualitätsprofil (hohe Qualität)
@@ -112,8 +107,7 @@ Alle Spielobjekte werden über **Factories** erzeugt, nicht direkt instanziiert.
 ```
 Factory (abstract)
 ├── Block_factory   → "default1", "water"
-├── Detail_factory  → "tree", "rock"
-└── UI_Factory      → "canvas", "text"
+└── Detail_factory  → "tree", "rock"
 ```
 
 ### Weltgenerierung (`Worldgen`)
@@ -124,41 +118,43 @@ Factory (abstract)
 
 Konfigurierbare Parameter in `Main.cs` (über den Unity Inspector):
 
-| Parameter      | Beschreibung                           | Standard |
-| -------------- | -------------------------------------- | -------- |
-| `bounds`       | Halbgröße der Welt (Radius in Kacheln) | 5        |
-| `spacing`      | Abstand zwischen Kacheln               | 1.1      |
-| `Detailspread` | Wahrscheinlichkeit für Details (0–100) | 20       |
+| Parameter      | Beschreibung                              | Standard        |
+| -------------- | ----------------------------------------- | --------------- |
+| `bounds`       | Halbgröße der Welt (Radius in Kacheln)    | 5               |
+| `spacing`      | Abstand zwischen Kacheln                  | 1.1             |
+| `Detailspread` | Wahrscheinlichkeit für Details (0–100)    | 20              |
+| `tree_size`    | Größe der Baum-Objekte                    | (0.25, 1, 0.25) |
+| `rock_size`    | Größe der Fels-Objekte                    | (0.5, 0.5, 0.5) |
+| `range`        | Reichweite des Spielers für Interaktionen | 2               |
 
 ### Interaktionssystem
 
 Jedes interagierbare Objekt erhält beim Spawn:
 
-- **`OnClick`** – Zerstört das Objekt bei Klick, wenn der Spieler in Reichweite ist
-- **`HoverDetector`** – Skaliert das Objekt leicht hoch beim Hovern (visuelle Rückmeldung)
+- **`OnClick`** – Zerstört das Objekt bei Klick, wenn der Spieler in Reichweite ist, und erhöht den entsprechenden Ressourcenzähler in `Main`
+- **`HoverDetector`** – Skaliert das Objekt leicht hoch beim Hovern (visuelle Rückmeldung), nur wenn der Spieler in Reichweite ist
 - **`InRange`** – Prüft zur Laufzeit den Abstand zum Spieler
 
 Die **Reichweite** (`range`) wird zentral in `Main.cs` konfiguriert.
 
 ### Spieler-System
 
-- **`Spawn_player`** – Erzeugt den Spieler-Cube, setzt Tag `"Player"` und verknüpft die Kamera
-- **`PlayerHandler`** – Physik-basierte Bewegung via `Rigidbody.MovePosition`
-- **`FollowPlayer`** – Kamera folgt dem Spieler mit `SmoothDamp` und konfigurierbarem Offset
+- **`Spawn_player`** – Erzeugt den Spieler-Cube zur Laufzeit, setzt Tag `"Player"` und verknüpft die Kamera
+- **`PlayerHandler`** – Physik-basierte Bewegung via `Rigidbody.MovePosition` und `Input.GetAxis`
+- **`FollowPlayer`** – Kamera folgt dem Spieler mit `Vector3.SmoothDamp` und konfigurierbarem Offset
 
 ---
 
-## 🎬 Szenenaufbau (`SampleScene`)
+## 🎬 Szenenaufbau (`main.unity`)
 
-| GameObject          | Komponenten                                                            | Beschreibung                   |
-| ------------------- | ---------------------------------------------------------------------- | ------------------------------ |
-| `Main Camera`       | Camera, AudioListener, UniversalAdditionalCameraData, **FollowPlayer** | Hauptkamera, folgt dem Spieler |
-| `Directional Light` | Light, UniversalAdditionalLightData                                    | Hauptlichtquelle               |
-| `Global Volume`     | Volume (global)                                                        | Post-Processing für die Szene  |
+| GameObject          | Komponenten                                                                      | Beschreibung                                             |
+| ------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `Main Camera`       | Camera, AudioListener, UniversalAdditionalCameraData, **Main**, **FollowPlayer** | Hauptkamera, trägt das Main-Script und folgt dem Spieler |
+| `Directional Light` | Light, UniversalAdditionalLightData                                              | Hauptlichtquelle                                         |
+| `UI`                | Canvas, CanvasScaler, GraphicRaycaster                                           | HUD mit Holz- und Steinzähler                            |
+| `EventSystem`       | EventSystem, StandaloneInputModule                                               | Unity UI Event-Handling                                  |
 
 > **Hinweis:** Der Spieler und alle Welt-Objekte werden **dynamisch zur Laufzeit** erzeugt – sie sind nicht in der Szene vorhanden.
-
-Ein `Main`-MonoBehaviour muss als Komponente auf einem GameObject in der Szene liegen, um das Spiel zu starten.
 
 ---
 
@@ -167,8 +163,8 @@ Ein `Main`-MonoBehaviour muss als Komponente auf einem GameObject in der Szene l
 ### PC-Profil (`PC_RPAsset`)
 
 - **Renderer:** Deferred Rendering
-- **Shadows:** 4 Kaskaden, 2048px Shadowmap, Soft Shadows
-- **SSAO:** Aktiviert (ScreenSpaceAmbientOcclusion)
+- **Shadows:** 4 Kaskaden, 2048px Shadowmap, Soft Shadows aktiviert
+- **SSAO:** Aktiviert (ScreenSpaceAmbientOcclusion, Intensity 0.4)
 - **Render Scale:** 1.0 (native Auflösung)
 - **Reflection Probes:** Blending + Box Projection + Atlas
 
@@ -179,7 +175,7 @@ Ein `Main`-MonoBehaviour muss als Komponente auf einem GameObject in der Szene l
 - **SSAO:** Deaktiviert
 - **Render Scale:** 0.8 (leichte Unterabtastung für Performance)
 
-### Post-Processing (SampleSceneProfile)
+### Post-Processing (`SampleSceneProfile`)
 
 - **Tonemapping:** ACES
 - **Bloom:** Threshold 1.0, Intensity 0.25, High Quality Filtering
@@ -188,26 +184,45 @@ Ein `Main`-MonoBehaviour muss als Komponente auf einem GameObject in der Szene l
 
 ---
 
+## ⚠️ Wichtige Hinweise
+
+### Legacy Input System (Pflicht für `PlayerHandler`)
+
+`PlayerHandler.cs` verwendet `Input.GetAxis("Horizontal")` und `Input.GetAxis("Vertical")` aus dem **Unity Legacy Input System**. Das neue **Input System Package** ist in neueren Unity-Projekten standardmäßig aktiv und führt dazu, dass diese Aufrufe einen Laufzeitfehler werfen und der Spieler sich nicht bewegt.
+
+**So prüfst und stellst du es um:**
+
+1. Gehe in Unity zu **Edit → Project Settings → Player**
+2. Scrolle runter zu **Other Settings → Configuration**
+3. Finde das Feld **Active Input Handling**
+4. Stelle es auf **Input Manager (Old)** oder **Both**
+
+> ⚠️ Steht es auf **Input System Package (New)**, funktioniert `PlayerHandler` nicht.  
+> Die einfachste Lösung ist **Both** – damit funktionieren sowohl das Legacy-System als auch das neue parallel.
+
+Nach dem Umstellen fordert Unity einen **Neustart des Editors** an – diesen bestätigen.
+
+**Alternativ** kann `PlayerHandler.cs` auf das neue Input System umgeschrieben werden. Dazu müsste das Package `com.unity.inputsystem` installiert und `Input.GetAxis` durch `InputAction`-Callbacks ersetzt werden.
+
+---
+
 ## 🐛 Bekannte Probleme & TODOs
 
-### Bugs / Code-Qualität
+### Offene Code-Qualitätsprobleme
 
-- [ ] `Spawn_player` erbt fälschlicherweise von `Main` – sollte eine eigenständige Klasse sein
-- [ ] `HoverDetector` fügt `InRange` per `Update()` hinzu – sollte in `Awake()` oder `Start()` geschehen
-- [ ] `Detail_factory` fügt `HoverDetector` doppelt hinzu (zwei `AddComponent<HoverDetector>()` Zeilen)
-- [ ] `Color.lavenderBlush` existiert nicht in Unity – führt zu Compile-Fehler in `Spawn_player.cs`
-- [ ] `UI_Text` verwendet veraltetes `Text`-UI-System (Legacy) statt `TextMeshPro`
-- [ ] `originalScale != null` in `HoverDetector` ist bei `Vector3` immer true (Value Type)
+- [ ] **`HoverDetector.Update()`** fügt `InRange` jedes Frame hinzu, falls die Komponente fehlt – das gehört einmalig in `Awake()` oder `Start()`
+- [ ] **`originalScale != null`** in `HoverDetector` ist bei `Vector3` (Value Type) immer `true` – die Null-Prüfung ist wirkungslos
+- [ ] **`FindObjectOfType<Main>()`** wird in mehreren Scripts bei jedem Klick / Frame aufgerufen – Referenz sollte einmalig gecacht werden
 
 ### Fehlende Systeme (geplant)
 
-- [ ] **Inventarsystem** – Ressourcen beim Abbauen aufnehmen und speichern
+- [ ] **Inventarsystem** – Ressourcen beim Abbauen aufnehmen und persistent speichern
 - [ ] **Crafting-System** – Rezepte definieren und Gegenstände herstellen
-- [ ] **Ressourcen-Typen** – Holz, Stein etc. als Daten (ScriptableObjects empfohlen)
-- [ ] **Werkzeug-System** – Unterschiedliche Tools für unterschiedliche Ressourcen
+- [ ] **Ressourcentypen als ScriptableObjects** – Holz, Stein etc. als Daten-Assets statt hardcodierter Werte
+- [ ] **Werkzeug-System** – Unterschiedliche Tools für unterschiedliche Ressourcen und Abbauraten
 - [ ] **Save/Load** – Spielstand speichern und laden
-- [ ] **Szenenverwaltung** – Menü, Pause, Game Over
-- [ ] **Sound** – Feedback beim Abbauen, Ambient-Sounds
+- [ ] **Szenenverwaltung** – Hauptmenü, Pause, Game Over
+- [ ] **Audio** – Feedback beim Abbauen, Umgebungsgeräusche
 
 ---
 
@@ -219,20 +234,22 @@ Ein `Main`-MonoBehaviour muss als Komponente auf einem GameObject in der Szene l
 - **Factory-Pattern beibehalten** für alle neuen Objekt-Typen
 - **ScriptableObjects** für Daten (Ressourcen, Rezepte, Werkzeuge) verwenden
 - Kommentare **nur dort wo nötig** – selbsterklärender Code wird bevorzugt
-- **`FindObjectOfType`** möglichst vermeiden – stattdessen Referenzen über Inspektor oder Events übergeben
+- **`FindObjectOfType`** möglichst vermeiden – Referenzen über Inspektor oder Events übergeben
 
 ### Namenskonventionen
 
-- Klassen: `PascalCase` (z.B. `BlockFactory`)
-- Methoden: `PascalCase` (z.B. `GenerateWorld`)
-- Private Felder: `camelCase` mit Unterstrich (z.B. `_playerTransform`)
-- Serialisierte Felder: `camelCase` (z.B. `bounds`)
+| Typ                  | Konvention | Beispiel          |
+| -------------------- | ---------- | ----------------- |
+| Klassen              | PascalCase | `BlockFactory`    |
+| Methoden             | PascalCase | `GenerateWorld()` |
+| Private Felder       | camelCase  | `playerTransform` |
+| Serialisierte Felder | camelCase  | `bounds`          |
 
 ### Empfohlene nächste Schritte
 
-1. Bug-Fixes aus der obigen Liste abarbeiten (insbesondere `Spawn_player` und `HoverDetector`)
-2. Inventarsystem mit ScriptableObjects für Ressourcentypen aufbauen
-3. UI auf TextMeshPro umstellen
+1. `HoverDetector` refactoren (`InRange` in `Awake()` hinzufügen, nicht per `Update()`)
+2. `FindObjectOfType`-Aufrufe durch gecachte Referenzen ersetzen
+3. Inventarsystem mit ScriptableObjects für Ressourcentypen aufbauen
 4. Crafting-Daten als ScriptableObject-Rezepte definieren
 
 ---

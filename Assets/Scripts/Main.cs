@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class Main : MonoBehaviour
 {
@@ -19,9 +20,13 @@ public class Main : MonoBehaviour
     [SerializeField] private float offset = 3f;
     [SerializeField] private float smoothTime = 0.25f;
 
+    [Header("WIP")]
     [SerializeField] private int dc_wood = 0;
     [SerializeField] private int dc_stone = 0;
 
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI woodText;
+    [SerializeField] private TextMeshProUGUI stoneText;
 
     //Klassen
     private Worldgen worldgen;
@@ -63,7 +68,15 @@ public class Main : MonoBehaviour
     public float GetOffset() { return offset; }
     public float GetSmoothTime() { return smoothTime; }
     public int GetDcWood() { return dc_wood; }
-    public void SetDcWood(int value) { dc_wood = value; }
+    public void SetDcWood(int value)
+    {
+        dc_wood = value;
+        if (woodText != null) woodText.text = "Holz: " + dc_wood;
+    }
     public int GetDcStone() { return dc_stone; }
-    public void SetDcStone(int value) { dc_stone = value; }
+    public void SetDcStone(int value)
+    {
+        dc_stone = value;
+        if (stoneText != null) stoneText.text = "Stein: " + dc_stone;
+    }
 }
